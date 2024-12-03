@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" charset="utf-8">
+<html>
+
+<head>
+    <title>JavaScriptでiframeを操作する</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #resize-handle {
+            width: 100%;
+            height: 10px;
+            background: gray;
+            cursor: ns-resize;
+            position: relative;
+        }
+        #iframe-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="iframe-container">
+        <iframe src="color_iframe.html" id="id_ifrem"></iframe>
+        <div id="resize-handle"></div>
+        <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem2"></iframe>
+    </div>
+    <script type="text/javascript">
+        function iframe_test() {
+            var o_iframe = document.getElementById('id_ifrem');
+            var color = o_iframe.contentWindow.document.getElementById('id_color');
+            color.innerHTML = "赤色に変えました。";
+            color.style.background = "red";
+        };
+        function iframe_test2() {
+            var o_iframe2 = document.getElementById('id_ifrem2');
+            alert("ここのアラートは出ます。次は出ません。");
+            var o_google = o_iframe2.contentWindow.document;
+            alert("contentWindowが利用できず、このアラートはでません。");
+        };
+        function resizeIframe() {
+            var width = document.getElementById('width').value;
+            var height = document.getElementById('height').value;
+            var iframe = document.getElementById('id_ifrem');
+            iframe.style.width = width + 'px';
+            iframe.style.height = height + 'px';
+        }
+
+        var iframeContainer = document.getElementById('iframe-container');
+        var resizeHandle = document.getElementById('resize-handle');
+        var iframe1 = document.getElementById('id_ifrem');
+        var iframe2 = document.getElementById('id_ifrem2');
+
+        resizeHandle.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            document.addEventListener('mousemove', resizeIframes);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        function resizeIframes(e) {
+            var containerRect = iframeContainer.getBoundingClientRect();
+            var newHeight1 = e.clientY - containerRect.top;
+            var newHeight2 = containerRect.bottom - e.clientY;
+
+            iframe1.style.height = newHeight1 + 'px';
+            iframe2.style.height = newHeight2 + 'px';
+        }
+
+        function stopResize() {
+            document.removeEventListener('mousemove', resizeIframes);
+            document.removeEventListener('mouseup', stopResize);
+        }
+    </script>
+</body>
+
+</html>
+
+
