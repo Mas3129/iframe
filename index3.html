@@ -19,7 +19,7 @@
         }
         #resize-col-handle {
             width: 10px;
-            height: 100%;
+            height: 50%;
             background: gray;
             cursor: ew-resize;
             position: relative;
@@ -31,7 +31,7 @@
         }
         iframe {
             flex: 1 1 50%;
-            width: 50%;
+            width: 48%;
             height: 50%;
             border: none;
         }
@@ -41,14 +41,13 @@
 <body>
     <div id="iframe-container">
         <iframe src="color_iframe.html" id="id_ifrem1"></iframe>
-        <div id="resize-col-handle"></div>
+        <!-- <div id="resize-col-handle"></div> -->
         <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem2"></iframe>
         <div id="resize-row-handle"></div>
         <iframe src="color_iframe.html" id="id_ifrem3"></iframe>
         <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem4"></iframe>
     </div>
     <script type="text/javascript">
-
         var iframeContainer = document.getElementById('iframe-container');
         var resizeRowHandle = document.getElementById('resize-row-handle');
         var resizeColHandle = document.getElementById('resize-col-handle');
@@ -92,12 +91,11 @@
         }
 
         function stopResize() {
-            document.removeEventListener('mousemove', resizeIframes);
+            document.removeEventListener('mousemove', resizeIframesRow);
+            document.removeEventListener('mousemove', resizeIframesCol);
             document.removeEventListener('mouseup', stopResize);
         }
     </script>
 </body>
 
 </html>
-
-

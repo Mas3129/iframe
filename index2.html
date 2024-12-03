@@ -10,18 +10,11 @@
             margin: 0;
             padding: 0;
         }
-        #resize-row-handle {
+        #resize-handle {
             width: 100%;
             height: 10px;
             background: gray;
             cursor: ns-resize;
-            position: relative;
-        }
-        #resize-col-handle {
-            width: 10px;
-            height: 100%;
-            background: gray;
-            cursor: ew-resize;
             position: relative;
         }
         #iframe-container {
@@ -41,35 +34,26 @@
 <body>
     <div id="iframe-container">
         <iframe src="color_iframe.html" id="id_ifrem1"></iframe>
-        <div id="resize-col-handle"></div>
         <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem2"></iframe>
-        <div id="resize-row-handle"></div>
+        <div id="resize-handle"></div>
         <iframe src="color_iframe.html" id="id_ifrem3"></iframe>
         <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem4"></iframe>
     </div>
     <script type="text/javascript">
-
         var iframeContainer = document.getElementById('iframe-container');
-        var resizeRowHandle = document.getElementById('resize-row-handle');
-        var resizeColHandle = document.getElementById('resize-col-handle');
+        var resizeHandle = document.getElementById('resize-handle');
         var iframe1 = document.getElementById('id_ifrem1');
         var iframe2 = document.getElementById('id_ifrem2');
         var iframe3 = document.getElementById('id_ifrem3');
         var iframe4 = document.getElementById('id_ifrem4');
 
-        resizeRowHandle.addEventListener('mousedown', function(e) {
+        resizeHandle.addEventListener('mousedown', function(e) {
             e.preventDefault();
-            document.addEventListener('mousemove', resizeIframesRow);
+            document.addEventListener('mousemove', resizeIframes);
             document.addEventListener('mouseup', stopResize);
         });
 
-        resizeColHandle.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            document.addEventListener('mousemove', resizeIframesCol);
-            document.addEventListener('mouseup', stopResize);
-        });
-
-        function resizeIframesRow(e) {
+        function resizeIframes(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
             var newHeight1 = e.clientY - containerRect.top;
             var newHeight2 = containerRect.bottom - e.clientY;
@@ -80,17 +64,6 @@
             iframe4.style.height = newHeight2 + 'px';
         }
 
-        function resizeIframesCol(e) {
-            var containerRect = iframeContainer.getBoundingClientRect();
-            var newWidth1 = e.clientX - containerRect.left;
-            var newWidth2 = containerRect.right - e.clientX;
-
-            iframe1.style.width = newWidth1 + 'px';
-            iframe3.style.width = newWidth1 + 'px';
-            iframe2.style.width = newWidth2 + 'px';
-            iframe4.style.width = newWidth2 + 'px';
-        }
-
         function stopResize() {
             document.removeEventListener('mousemove', resizeIframes);
             document.removeEventListener('mouseup', stopResize);
@@ -99,5 +72,3 @@
 </body>
 
 </html>
-
-
