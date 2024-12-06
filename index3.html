@@ -12,12 +12,26 @@
         }
         #resize-row-handle {
             width: 100%;
-            height: 10px;
+            height: 50px;
             background: gray;
             cursor: ns-resize;
             position: relative;
         }
-        #resize-col-handle {
+        #resize-row-handle-aux {
+            width: 100%;
+            height: 50px;
+            background: gray;
+            /* cursor: ns-resize; */
+            position: relative;
+        }
+        #resize-col-handle1 {
+            width: 10px;
+            height: 50%;
+            background: gray;
+            cursor: ew-resize;
+            position: relative;
+        }
+        #resize-col-handle2 {
             width: 10px;
             height: 50%;
             background: gray;
@@ -30,7 +44,7 @@
             height: 100%;
         }
         iframe {
-            flex: 1 1 50%;
+            flex: 1 1 48%;
             width: 48%;
             height: 50%;
             border: none;
@@ -41,16 +55,19 @@
 <body>
     <div id="iframe-container">
         <iframe src="color_iframe.html" id="id_ifrem1"></iframe>
-        <!-- <div id="resize-col-handle"></div> -->
-        <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem2"></iframe>
+        <div id="resize-col-handle1"></div>
+        <iframe src="https://hrr-cps.jp/map.html" id="id_ifrem2"></iframe>
+        <!-- <div id="resize-row-handle-aux"></div> -->
         <div id="resize-row-handle"></div>
         <iframe src="color_iframe.html" id="id_ifrem3"></iframe>
-        <iframe src="https://maps.google.co.jp/maps?output=embed&q=東京タワー" id="id_ifrem4"></iframe>
+        <div id="resize-col-handle2"></div>
+        <iframe src="https://hrr-cps.jp/map2.html" id="id_ifrem4"></iframe>
     </div>
     <script type="text/javascript">
         var iframeContainer = document.getElementById('iframe-container');
         var resizeRowHandle = document.getElementById('resize-row-handle');
-        var resizeColHandle = document.getElementById('resize-col-handle');
+        var resizeColHandle1 = document.getElementById('resize-col-handle1');
+        var resizeColHandle2 = document.getElementById('resize-col-handle2');
         var iframe1 = document.getElementById('id_ifrem1');
         var iframe2 = document.getElementById('id_ifrem2');
         var iframe3 = document.getElementById('id_ifrem3');
@@ -62,16 +79,22 @@
             document.addEventListener('mouseup', stopResize);
         });
 
-        resizeColHandle.addEventListener('mousedown', function(e) {
+        
+        resizeColHandle1.addEventListener('mousedown', function(e) {
             e.preventDefault();
-            document.addEventListener('mousemove', resizeIframesCol);
+            document.addEventListener('mousemove', resizeIframesCol1);
             document.addEventListener('mouseup', stopResize);
         });
-
+        resizeColHandle2.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            document.addEventListener('mousemove', resizeIframesCol2);
+            document.addEventListener('mouseup', stopResize);
+        });
         function resizeIframesRow(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
-            var newHeight1 = e.clientY - containerRect.top;
+            var newHeight1 = e.clientY /*- containerRect.top*/;
             var newHeight2 = containerRect.bottom - e.clientY;
+            console.log('resizeIframesRow', e.clientY, containerRect.top, containerRect.bottom, newHeight1, newHeight2);
 
             iframe1.style.height = newHeight1 + 'px';
             iframe2.style.height = newHeight1 + 'px';
@@ -79,22 +102,51 @@
             iframe4.style.height = newHeight2 + 'px';
         }
 
-        function resizeIframesCol(e) {
+        function resizeIframesCol1(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
             var newWidth1 = e.clientX - containerRect.left;
             var newWidth2 = containerRect.right - e.clientX;
-
+            
+            console.log('resizeIframesCol1', e.clientX, containerRect.left, containerRect.right, newWidth1, newWidth2);
             iframe1.style.width = newWidth1 + 'px';
-            iframe3.style.width = newWidth1 + 'px';
             iframe2.style.width = newWidth2 + 'px';
+        }
+        function resizeIframesCol2(e) {
+            var containerRect = iframeContainer.getBoundingClientRect();
+            var newWidth1 = e.clientX - containerRect.left;
+            var newWidth2 = containerRect.right - e.clientX;
+            console.log('resizeIframesCol2', e.clientX, containerRect.left, containerRect.right, newWidth1, newWidth2);
+
+            iframe3.style.width = newWidth1 + 'px';
             iframe4.style.width = newWidth2 + 'px';
         }
 
         function stopResize() {
+            console.log('stopResize');
             document.removeEventListener('mousemove', resizeIframesRow);
-            document.removeEventListener('mousemove', resizeIframesCol);
+            document.removeEventListener('mousemove', resizeIframesCol1);
+            document.removeEventListener('mousemove', resizeIframesCol2);
             document.removeEventListener('mouseup', stopResize);
         }
+        // DOMツリー構築後にiframe要素を取得して、addEventlistenerを登録する
+        window.addEventListener("DOMContentLoaded", () => {
+            var iframe1 = document.getElementById('id_ifrem1');
+            var iframe2 = document.getElementById('id_ifrem2');
+            var iframe3 = document.getElementById('id_ifrem3');
+            var iframe4 = document.getElementById('id_ifrem4');
+            iframe1.contentWindow.addEventListener("click", () => {
+                console.log("clickを検知しました");
+            })
+            iframe2.contentWindow.addEventListener("click", () => {
+                console.log("clickを検知しました");
+            })
+            iframe3.contentWindow.addEventListener("click", () => {
+                alert("clickを検知しました");
+            })
+            iframe4.contentWindow.addEventListener("click", () => {
+                alert("clickを検知しました");
+            })
+        })
     </script>
 </body>
 
