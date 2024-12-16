@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #iframe-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            flex: 1;
+            height: 100%;
+            border: none;
+        }
+        #resize-col-handle1 {
+            width: 10px;
+            background: gray;
+            cursor: ew-resize;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="iframe-container">
+        <iframe src="color_iframe.html" id="id_ifrem1"></iframe>
+        <div id="resize-col-handle1"></div>
+        <iframe src="https://hrr-cps.jp/map.html" id="id_ifrem2"></iframe>
+    </div>
+    <script type="text/javascript">
+        var iframeContainer = document.getElementById('iframe-container');
+        var resizeColHandle1 = document.getElementById('resize-col-handle1');
+        var iframe1 = document.getElementById('id_ifrem1');
+        var iframe2 = document.getElementById('id_ifrem2');
+
+        function disableIframePointerEvents() {
+            iframe1.style.pointerEvents = 'none';
+            iframe2.style.pointerEvents = 'none';
+        }
+
+        function enableIframePointerEvents() {
+            iframe1.style.pointerEvents = 'auto';
+            iframe2.style.pointerEvents = 'auto';
+        }
+
+        resizeColHandle1.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            disableIframePointerEvents();
+            document.addEventListener('mousemove', resizeIframesCol1);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        function resizeIframesCol1(e) {
+            var containerRect = iframeContainer.getBoundingClientRect();
+            var newWidth1 = e.clientX - containerRect.left;
+            var newWidth2 = containerRect.right - e.clientX;
+            
+            console.log('resizeIframesCol1', e.clientX, containerRect.left, containerRect.right, newWidth1, newWidth2);
+            iframe1.style.flex = '0 0 ' + newWidth1 + 'px';
+            iframe2.style.flex = '0 0 ' + newWidth2 + 'px';
+        }
+
+        function stopResize() {
+            console.log('stopResize');
+            document.removeEventListener('mousemove', resizeIframesCol1);
+            document.removeEventListener('mouseup', stopResize);
+            enableIframePointerEvents();
+        }
+    </script>
+</body>
+</html>

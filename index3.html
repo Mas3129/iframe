@@ -12,14 +12,14 @@
         }
         #resize-row-handle {
             width: 100%;
-            height: 50px;
+            height: 10px;
             background: gray;
             cursor: ns-resize;
             position: relative;
         }
         #resize-row-handle-aux {
             width: 100%;
-            height: 50px;
+            height: 10px;
             background: gray;
             /* cursor: ns-resize; */
             position: relative;
@@ -73,8 +73,24 @@
         var iframe3 = document.getElementById('id_ifrem3');
         var iframe4 = document.getElementById('id_ifrem4');
 
+        // iframeのpointer-eventsをnoneにすると、iframe内の要素に対するイベントが発火しなくなる
+        function disableIframePointerEvents() {
+            iframe1.style.pointerEvents = 'none';
+            iframe2.style.pointerEvents = 'none';
+            iframe3.style.pointerEvents = 'none';
+            iframe4.style.pointerEvents = 'none';
+        }
+        //マウスイベントを有効にする
+        function enableIframePointerEvents() {
+            iframe1.style.pointerEvents = 'auto';
+            iframe2.style.pointerEvents = 'auto';
+            iframe3.style.pointerEvents = 'auto';
+            iframe4.style.pointerEvents = 'auto';
+        }
+
         resizeRowHandle.addEventListener('mousedown', function(e) {
             e.preventDefault();
+            disableIframePointerEvents();
             document.addEventListener('mousemove', resizeIframesRow);
             document.addEventListener('mouseup', stopResize);
         });
@@ -82,43 +98,51 @@
         
         resizeColHandle1.addEventListener('mousedown', function(e) {
             e.preventDefault();
+            disableIframePointerEvents();
             document.addEventListener('mousemove', resizeIframesCol1);
             document.addEventListener('mouseup', stopResize);
         });
         resizeColHandle2.addEventListener('mousedown', function(e) {
             e.preventDefault();
+            disableIframePointerEvents();
             document.addEventListener('mousemove', resizeIframesCol2);
             document.addEventListener('mouseup', stopResize);
         });
         function resizeIframesRow(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
-            var newHeight1 = e.clientY /*- containerRect.top*/;
-            var newHeight2 = containerRect.bottom - e.clientY;
+            var newHeight1 = e.clientY - containerRect.top -5;
+            var newHeight2 = containerRect.bottom - e.clientY + 5;
             console.log('resizeIframesRow', e.clientY, containerRect.top, containerRect.bottom, newHeight1, newHeight2);
 
             iframe1.style.height = newHeight1 + 'px';
             iframe2.style.height = newHeight1 + 'px';
             iframe3.style.height = newHeight2 + 'px';
             iframe4.style.height = newHeight2 + 'px';
+            resizeColHandle1.style.height = newHeight1 + 'px';
+            resizeColHandle2.style.height = newHeight2 + 'px';
         }
 
         function resizeIframesCol1(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
-            var newWidth1 = e.clientX - containerRect.left;
-            var newWidth2 = containerRect.right - e.clientX;
+            var newWidth1 = e.clientX - containerRect.left -5;
+            var newWidth2 = containerRect.right - e.clientX -5;
             
             console.log('resizeIframesCol1', e.clientX, containerRect.left, containerRect.right, newWidth1, newWidth2);
-            iframe1.style.width = newWidth1 + 'px';
-            iframe2.style.width = newWidth2 + 'px';
+            // iframe1.style.width = newWidth1 + 'px';
+            // iframe2.style.width = newWidth2 + 'px';
+            iframe1.style.flex = '0 0 ' + newWidth1 + 'px';
+            iframe2.style.flex = '0 0 ' + newWidth2 + 'px';
         }
         function resizeIframesCol2(e) {
             var containerRect = iframeContainer.getBoundingClientRect();
-            var newWidth1 = e.clientX - containerRect.left;
-            var newWidth2 = containerRect.right - e.clientX;
+            var newWidth1 = e.clientX - containerRect.left -5;
+            var newWidth2 = containerRect.right - e.clientX -5;
             console.log('resizeIframesCol2', e.clientX, containerRect.left, containerRect.right, newWidth1, newWidth2);
 
-            iframe3.style.width = newWidth1 + 'px';
-            iframe4.style.width = newWidth2 + 'px';
+            // iframe3.style.width = newWidth1 + 'px';
+            // iframe4.style.width = newWidth2 + 'px';
+            iframe3.style.flex = '0 0 ' + newWidth1 + 'px';
+            iframe4.style.flex = '0 0 ' + newWidth2 + 'px';
         }
 
         function stopResize() {
@@ -127,26 +151,8 @@
             document.removeEventListener('mousemove', resizeIframesCol1);
             document.removeEventListener('mousemove', resizeIframesCol2);
             document.removeEventListener('mouseup', stopResize);
+            enableIframePointerEvents();
         }
-        // DOMツリー構築後にiframe要素を取得して、addEventlistenerを登録する
-        window.addEventListener("DOMContentLoaded", () => {
-            var iframe1 = document.getElementById('id_ifrem1');
-            var iframe2 = document.getElementById('id_ifrem2');
-            var iframe3 = document.getElementById('id_ifrem3');
-            var iframe4 = document.getElementById('id_ifrem4');
-            iframe1.contentWindow.addEventListener("click", () => {
-                console.log("clickを検知しました");
-            })
-            iframe2.contentWindow.addEventListener("click", () => {
-                console.log("clickを検知しました");
-            })
-            iframe3.contentWindow.addEventListener("click", () => {
-                alert("clickを検知しました");
-            })
-            iframe4.contentWindow.addEventListener("click", () => {
-                alert("clickを検知しました");
-            })
-        })
     </script>
 </body>
 
